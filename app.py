@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
 import logging
+
+from flask import Flask, jsonify, request
 
 logging.basicConfig(level=logging.INFO)
 
@@ -37,4 +38,6 @@ def post_messsage():
         return jsonify({'sucess':'false'})
     else:
         return jsonify({'sucess':'true'})
-        
+    
+if __name__ == '__main__':
+    app.run()        
