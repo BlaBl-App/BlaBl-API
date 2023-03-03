@@ -1,12 +1,13 @@
 import sqlite3
+
 from rich import print
 import time
 import logging
 
 logging.basicConfig(level=logging.INFO)
 
+DB_NAME = "BlaBl-App.db"
 
-DB_NAME = 'BlaBl-App.db'
 
 
 
