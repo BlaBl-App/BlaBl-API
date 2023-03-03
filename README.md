@@ -31,3 +31,9 @@
  parma `message` message conntent to be posted limited to 256 words<br>
 </details>
 
+## Setup
+
+You need to have docker installed
+
+after cloning the projet, in the root of th project run `docker build -t blapi . `<br>
+once do you can start the docker with `docker run -it -p 5555:5555 --name blapi1 blapi`
