@@ -1,8 +1,8 @@
 import sqlite3
+
 from rich import print
 
-
-DB_NAME = 'BlaBl-App.db'
+DB_NAME = "BlaBl-App.db"
 
 try:
     sqliteConnection = sqlite3.connect(DB_NAME)
@@ -21,6 +21,7 @@ finally:
     if sqliteConnection:
         sqliteConnection.close()
         print("The SQLite connection is closed")
+
 
 def init_db():
     try:
