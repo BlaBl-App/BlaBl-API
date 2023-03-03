@@ -2,6 +2,8 @@ import logging
 
 from flask import Flask, jsonify, request
 
+from manage_db import init_db, insert_message, select_message
+
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
@@ -17,43 +19,26 @@ def get_messsage():
     nb_message = request.form.get("nb", default="")
     start = request.form.get("start", default="")
 
-    return jsonify(
-        {
-            "sucess": "true",
-            "messages": [
-                {"id": 12, "nickname": "bob", "pick": "", "message": "hello"},
-                {"id": 12, "nickname": "alice", "pick": "", "message": "hi"},
-                {
-                    "id": 12,
-                    "nickname": "alice",
-                    "pick": "",
-                    "message": "nice to meet you Alice",
-                },
-                {
-                    "id": 12,
-                    "nickname": "bob",
-                    "pick": "",
-                    "message": "where are you from",
-                },
-            ],
-        }
-    )
+    return jsonify({"success": "true", "messages": select_message()})
 
 
 @app.route("/api/message", methods=["POST"])
-def post_messsage():
+def post_message():
     nickname = request.form.get("nickname", default="")
-    pick = request.form.get("pick", default="")
+    pic = request.form.get("pic", default="")
     message = request.form.get("message", default="")
 
-    logging.info(f"nickname={nickname} pick={pick} message={message}")
+    logging.info(f"nickname={nickname} pic={pic} message={message}")
 
     # nickname is mandatory
     if nickname == "":
-        return jsonify({"sucess": "false"})
+        return jsonify({"success": "false"})
     else:
-        return jsonify({"sucess": "true"})
+        success = insert_message(nickname, pic, message)
+        return jsonify({"sucess": success})
 
 
 if __name__ == "__main__":
+    init_db()
+
     app.run(host="0.0.0.0", port=5555)

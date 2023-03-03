@@ -36,4 +36,7 @@
 You need to have docker installed
 
 after cloning the projet, in the root of th project run `docker build -t blapi . `<br>
-once do you can start the docker with `docker run -it -p 5555:5555 --name blapi1 blapi`
+once do you can start the docker with `docker rm blapi1 & docker run -it -p 5555:5555 --name blapi1 blapi`
+
+test command `curl http://tchoutchou.ovh:5555/api/message -d nickname=bob -d pic= -d message="hi my name is bob"`
+and `curl http://tchoutchou.ovh:5555/api/message`
