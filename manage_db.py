@@ -33,8 +33,9 @@ def init_db():
         sqlite_create_table_query = """CREATE TABLE message (
                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     pic TEXT,
-                                    nickname text NOT NULL,
-                                    message text NOT NULL,
+                                    nickname TEXT NOT NULL,
+                                    message TEXT NOT NULL,
+                                    forum TEXT NOT NULL,
                                     time INTEGER NOT NULL);"""
 
         sqlite_connection, cursor = init_connection()
@@ -52,18 +53,18 @@ def init_db():
             sqlite_connection.close()
 
 
-def insert_message(nickname, pic, message_content, time=int(time.time() * 1000)):
+def insert_message(nickname, pic, message_content, forum, time=int(time.time() * 1000)):
     nb_row = 0
     try:
         sqlite_connection, cursor = init_connection()
         logging.info("Connected adding message...")
-
-        sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}',{time});"
+        print(forum)
+        sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}', {forum},{time});"
         cursor.execute(sqlite_select_query)
         sqlite_connection.commit()
         nb_row = cursor.rowcount
         logging.info(
-            f"added row {nb_row}",
+            f"added {nb_row} row",
         )
         cursor.close()
 
@@ -76,14 +77,14 @@ def insert_message(nickname, pic, message_content, time=int(time.time() * 1000))
     return nb_row > 1 if True else False
 
 
-def select_message(nb=10, start=0):
+def select_message(nb=10, start=0, forum=1):
     rows = []
     try:
         sqlite_connection, cursor = init_connection()
         logging.info("Connected getting message...")
 
         sqlite_select_query = (
-            f"SELECT * FROM message WHERE id > {start} ORDER BY time LIMIT {nb};"
+            f"SELECT * FROM message WHERE id > {start} and forum = {forum} ORDER BY time LIMIT {nb};"
         )
         # sqlite_select_Query = f"SELECT name FROM sqlite_master WHERE type='table'"
         cursor.execute(sqlite_select_query)
@@ -108,5 +109,5 @@ def init_connection():
 if __name__ == "__main__":
     init_db()
     print(select_message())
-    print(insert_message("bob", "", "hi there"))
-    print(select_message())
+    print(insert_message("bob", "", "hi there", 1))
+    print(select_message(forum=0))

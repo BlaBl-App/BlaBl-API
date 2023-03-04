@@ -16,10 +16,16 @@ def root():
 
 @app.route("/api/message", methods=["GET"])
 def get_messsage():
-    nb_message = request.form.get("nb", default="")
-    start = request.form.get("start", default="")
+    nb_message = request.form.get("nb", default=None)
+    start = request.form.get("start", default=None)
 
-    return jsonify({"success": "true", "messages": select_message()})
+    if nb_message is None and start is None:
+        return jsonify({"success": "false", "messages": select_message()})
+    elif nb_message is None:
+        return jsonify({"success": "false", "messages": select_message(start=start)})
+    elif start is None:
+        return jsonify({"success": "false", "messages": select_message(nb_message=nb_message)})
+    return jsonify({"success": "true", "messages": select_message(nb_message, start)})
 
 
 @app.route("/api/message", methods=["POST"])
@@ -27,15 +33,15 @@ def post_message():
     nickname = request.form.get("nickname", default="")
     pic = request.form.get("pic", default="")
     message = request.form.get("message", default="")
+    forum = request.form.get("forum", default="")
 
-    logging.info(f"nickname={nickname} pic={pic} message={message}")
+    logging.info(f"nickname={nickname} pic={pic} message={message} forum={forum}")
 
     # nickname is mandatory
     if nickname == "":
         return jsonify({"success": "false"})
-    else:
-        success = insert_message(nickname, pic, message)
-        return jsonify({"sucess": success})
+    success = insert_message(nickname, pic, message)
+    return jsonify({"sucess": success})
 
 
 if __name__ == "__main__":
