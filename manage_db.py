@@ -56,6 +56,7 @@ def init_db():
 def insert_message(nickname, pic, message_content, forum, time=int(time.time() * 1000)):
     nb_row = 0
     try:
+        message_content = message_content.replace('\'', "")
         sqlite_connection, cursor = init_connection()
         logging.info("Connected adding message...")
         print(forum)
@@ -74,7 +75,7 @@ def insert_message(nickname, pic, message_content, forum, time=int(time.time() *
         if sqlite_connection:
             sqlite_connection.close()
 
-    return nb_row > 1 if True else False
+    return nb_row > 0
 
 
 def select_message(nb, start, forum):
