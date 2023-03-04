@@ -35,7 +35,7 @@ def init_db():
                                     pic TEXT,
                                     nickname TEXT NOT NULL,
                                     message TEXT NOT NULL,
-                                    forum TEXT NOT NULL,
+                                    forum INTEGER NOT NULL,
                                     time INTEGER NOT NULL);"""
 
         sqlite_connection, cursor = init_connection()
