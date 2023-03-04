@@ -77,7 +77,7 @@ def insert_message(nickname, pic, message_content, forum, time=int(time.time() *
     return nb_row > 1 if True else False
 
 
-def select_message(nb=10, start=0, forum=1):
+def select_message(nb, start, forum):
     rows = []
     try:
         sqlite_connection, cursor = init_connection()

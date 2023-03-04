@@ -1,0 +1,29 @@
+{
+    "forums": [
+        {
+            "id": 1,
+            "name": "General",
+            "description": "General discussion"
+        },
+        {
+            "id": 2,
+            "name": "Development",
+            "description": "Development discussion"
+        },
+        {
+            "id": 3,
+            "name": "Support",
+            "description": "Support discussion"
+        },
+        {
+            "id": 4,
+            "name": "League of Legends",
+            "description": "League of Legends discussion"
+        },
+        {
+            "id": 5,
+            "name": "Sport",
+            "description": "Sport discussion"
+        }
+    ]
+}
