@@ -55,6 +55,7 @@ def init_db():
 def insert_message(nickname, pic, message_content, time=int(time.time() * 1000)):
     nb_row = 0
     try:
+        messageContent = messageContent.strip('"')
         sqlite_connection, cursor = init_connection()
         logging.info("Connected adding message...")
 
