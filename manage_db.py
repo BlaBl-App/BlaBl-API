@@ -73,7 +73,7 @@ def insert_message(nickname, pic, message_content, time=int(time.time() * 1000))
         if sqlite_connection:
             sqlite_connection.close()
 
-    return nb_row > 1 if True else False
+    return nb_row > 0
 
 
 def select_message(nb=10, start=0):
