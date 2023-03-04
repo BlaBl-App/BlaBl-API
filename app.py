@@ -2,7 +2,7 @@ import logging
 
 from flask import Flask, jsonify, request
 
-from common import get_forums_from_file
+from common import add_forum, get_forums_from_file, remove_forum
 from manage_db import init_db, insert_message, select_message
 
 logging.basicConfig(level=logging.INFO)
@@ -19,6 +19,32 @@ def root():
 def get_forums():
     # returns a list of forums object {"id": int, "name": str, "description": str}
     return jsonify({"success": "true", "forums": get_forums_from_file()})
+
+
+@app.route("/api/forums", methods=["POST"])
+def add_forum():
+    name = request.form.get("name", default="")
+    description = request.form.get("description", default="")
+
+    logging.info(f"name={name} description={description}")
+
+    # name is mandatory
+    if name == "":
+        return jsonify({"success": "false"})
+    success = add_forum(name, description)
+    return jsonify({"success": success})
+
+
+@app.route("/api/forums", methods=["DELETE"])
+def delete_forum():
+    id = request.form.get("id", default=-1)
+    logging.info(f"id={id}")
+
+    # id is mandatory
+    if id == -1:
+        return jsonify({"success": "false"})
+    success = remove_forum(id)
+    return jsonify({"success": success})
 
 
 @app.route("/api/message", methods=["GET"])
