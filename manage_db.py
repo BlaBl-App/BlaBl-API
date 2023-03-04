@@ -11,13 +11,11 @@ DB_NAME = "BlaBl-App.db"
 
 def drop_db():
     try:
-        sqliteConnection = sqlite3.connect(DB_NAME)
+        sqlite_connection, cursor = init_connection()
         sqlite_create_table_query = "DROP TABLE message"
-
-        cursor = sqliteConnection.cursor()
         logging.info("Connected dropping table...")
         cursor.execute(sqlite_create_table_query)
-        sqliteConnection.commit()
+        sqlite_connection.commit()
         logging.info("succes!")
 
         cursor.close()
@@ -25,14 +23,13 @@ def drop_db():
     except sqlite3.Error as error:
         logging.error("Error while dropping table", error)
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
+        if sqlite_connection:
+            sqlite_connection.close()
 
 
 def init_db():
     drop_db()
     try:
-        sqliteConnection = sqlite3.connect(DB_NAME)
         sqlite_create_table_query = """CREATE TABLE message (
                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     pic TEXT,
@@ -40,10 +37,10 @@ def init_db():
                                     message text NOT NULL,
                                     time INTEGER NOT NULL);"""
 
-        cursor = sqliteConnection.cursor()
+        sqlite_connection, cursor = init_connection()
         logging.info("Connected making table...")
         cursor.execute(sqlite_create_table_query)
-        sqliteConnection.commit()
+        sqlite_connection.commit()
         logging.info("succes!")
 
         cursor.close()
@@ -51,20 +48,19 @@ def init_db():
     except sqlite3.Error as error:
         logging.error("Error while creating a sqlite table", error)
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
+        if sqlite_connection:
+            sqlite_connection.close()
 
 
-def insert_message(nickname, pic, messageContent, time=int(time.time() * 1000)):
+def insert_message(nickname, pic, message_content, time=int(time.time() * 1000)):
     nb_row = 0
     try:
-        sqliteConnection = sqlite3.connect(DB_NAME)
-        cursor = sqliteConnection.cursor()
+        sqlite_connection, cursor = init_connection()
         logging.info("Connected adding message...")
 
-        sqlite_select_Query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{messageContent}',{time});"
-        cursor.execute(sqlite_select_Query)
-        sqliteConnection.commit()
+        sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}',{time});"
+        cursor.execute(sqlite_select_query)
+        sqlite_connection.commit()
         nb_row = cursor.rowcount
         logging.info(
             f"added row {nb_row}",
@@ -74,8 +70,8 @@ def insert_message(nickname, pic, messageContent, time=int(time.time() * 1000)):
     except sqlite3.Error as error:
         logging.error("Error while adding message", error)
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
+        if sqlite_connection:
+            sqlite_connection.close()
 
     return nb_row > 1 if True else False
 
@@ -83,15 +79,14 @@ def insert_message(nickname, pic, messageContent, time=int(time.time() * 1000)):
 def select_message(nb=10, start=0):
     rows = []
     try:
-        sqliteConnection = sqlite3.connect(DB_NAME)
-        cursor = sqliteConnection.cursor()
+        sqlite_connection, cursor = init_connection()
         logging.info("Connected getting message...")
 
-        sqlite_select_Query = (
+        sqlite_select_query = (
             f"SELECT * FROM message WHERE id > {start} ORDER BY time LIMIT {nb};"
         )
         # sqlite_select_Query = f"SELECT name FROM sqlite_master WHERE type='table'"
-        cursor.execute(sqlite_select_Query)
+        cursor.execute(sqlite_select_query)
         rows = cursor.fetchall()
         logging.info(f"selected row {len(rows)}")
         cursor.close()
@@ -99,10 +94,15 @@ def select_message(nb=10, start=0):
     except sqlite3.Error as error:
         logging.info("Error while getting message", error)
     finally:
-        if sqliteConnection:
-            sqliteConnection.close()
+        if sqlite_connection:
+            sqlite_connection.close()
 
     return rows
+
+def init_connection():
+    sqlite_connection = sqlite3.connect(DB_NAME)
+    cursor = sqlite_connection.cursor()
+    return sqlite_connection, cursor
 
 
 if __name__ == "__main__":
