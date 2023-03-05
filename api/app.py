@@ -86,7 +86,7 @@ def post_message():
     # save that a new message is posted
     if success:
         is_last_message_id_saved = False
-    return jsonify({"sucess": success})
+    return jsonify({"success": success})
 
 
 @app.route("/api/last_message_id", methods=["GET"])

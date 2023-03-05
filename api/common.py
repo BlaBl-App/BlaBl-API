@@ -18,10 +18,7 @@ def add_forum_into_file(name, description):
 def remove_forum(id):
     with open("forums.json", "r") as f:
         data = json.load(f)
-        print("Data before:", data)
-        print(id)
         data["forums"] = [forum for forum in data["forums"] if forum["id"] != id]
-        print("Data after:", data)
     with open("forums.json", "w") as f:
         json.dump(data, f)
     return True
