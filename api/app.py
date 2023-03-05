@@ -3,11 +3,15 @@ import logging
 from flask import Flask, jsonify, request
 
 from .common import add_forum_into_file, get_forums_from_file, remove_forum
-from .manage_db import init_db, insert_message, select_message
+from .manage_db import (init_db, insert_message, select_last_message_id,
+                        select_message)
 
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
+
+is_last_message_id_saved = False
+last_message_id = -1
 
 
 @app.route("/")
@@ -54,9 +58,9 @@ def delete_forum():
 
 @app.route("/api/message", methods=["GET"])
 def get_messsage():
-    nb_message = request.form.get("nb", default=10)
-    start = request.form.get("start", default=0)
-    forum = request.form.get("forum", default=1)
+    nb_message = request.args.get("nb", default=10)
+    start = request.args.get("start", default=0)
+    forum = request.args.get("forum", default=1)
 
     logging.info(f"nb_message={nb_message} start={start} forum={forum}")
 
@@ -67,6 +71,7 @@ def get_messsage():
 
 @app.route("/api/message", methods=["POST"])
 def post_message():
+    global is_last_message_id_saved
     nickname = request.form.get("nickname", default=None)
     pic = request.form.get("pic", default="")
     message = request.form.get("message", default="")
@@ -78,8 +83,28 @@ def post_message():
     if nickname == "":
         return jsonify({"success": False})
     success = insert_message(nickname, pic, message, forum)
+    # save that a new message is posted
+    if success:
+        is_last_message_id_saved = False
     return jsonify({"sucess": success})
 
+
+@app.route("/api/last_message_id", methods=["GET"])
+def get_last_message_id():
+    global is_last_message_id_saved
+    global last_message_id
+    forum = request.args.get("forum", default=1)
+
+    # do not request to BD last message if no new message posted
+    if not is_last_message_id_saved:
+        last_message_id = select_last_message_id(forum)
+
+    logging.info(
+        f"last_message_id={last_message_id} is_last_message_id_saved={is_last_message_id_saved}"
+    )
+    is_last_message_id_saved = True
+
+    return jsonify({"success": "true", "last_message_id": last_message_id})
 
 
 if __name__ == "__main__":

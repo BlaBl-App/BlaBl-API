@@ -34,7 +34,7 @@ def init_db():
                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     pic TEXT,
                                     nickname TEXT NOT NULL,
-                                    message TEXT NOT NULL,
+                                    message TEXT(256) NOT NULL,
                                     forum INTEGER NOT NULL,
                                     time INTEGER NOT NULL);"""
 
@@ -57,7 +57,9 @@ def insert_message(nickname, pic, message_content, forum):
     post_time = int(time.time() * 1000)
     nb_row = 0
     try:
-        message_content = message_content.replace("'", "")
+        message_content = message_content.strip('"')
+        message_content = message_content.replace("'", "''")
+        print(message_content)
         sqlite_connection, cursor = init_connection()
         logging.info("Connected adding message...")
         sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}', {forum},{post_time});"
@@ -78,7 +80,7 @@ def insert_message(nickname, pic, message_content, forum):
     return nb_row > 0
 
 
-def select_message(nb, start, forum):
+def select_message(nb=10, start=-1, forum=1):
     rows = []
     try:
         sqlite_connection, cursor = init_connection()
@@ -104,3 +106,43 @@ def init_connection():
     sqlite_connection = sqlite3.connect(DB_NAME)
     cursor = sqlite_connection.cursor()
     return sqlite_connection, cursor
+<<<<<<< HEAD:api/manage_db.py
+=======
+
+
+def select_last_message_id(forum=1):
+    message_id = -1
+    try:
+        sqlite_connection, cursor = init_connection()
+        logging.info("Connected getting last message id...")
+
+        sqlite_select_query = (
+            f"SELECT id FROM message WHERE forum = {forum} ORDER BY time DESC LIMIT 1;"
+        )
+        cursor.execute(sqlite_select_query)
+        row = cursor.fetchone()
+        if row != None:
+            message_id = row[0]
+        logging.info(f"message id {message_id}")
+        cursor.close()
+
+    except sqlite3.Error as error:
+        logging.info("Error while getting last message id", error)
+    except sqlite3.Error as error:
+        logging.info("Error while getting last message id", error)
+    finally:
+        if sqlite_connection:
+            sqlite_connection.close()
+
+    return message_id
+
+
+if __name__ == "__main__":
+    init_db()
+    print(select_message())
+    print(insert_message("bob", "", "hi there", 1))
+    print(select_message())
+    print(select_last_message_id())
+    print(insert_message("bob", "", "hi there", 1))
+    print(select_last_message_id())
+>>>>>>> origin/main:manage_db.py
