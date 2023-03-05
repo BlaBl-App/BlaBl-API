@@ -15,6 +15,11 @@ def root():
     return "Hey 👋 it's working! <br>This is the root of BlaBl'App API please read the <a href='https://github.com/BlaBl-App/BlaBl-API'>instruction</a>"
 
 
+@app.route("/api", methods=["GET"])
+def get_serv_info():
+    return jsonify({"success": "true", "name": "mother API"})
+
+
 @app.route("/api/forums", methods=["GET"])
 def get_forums():
     # returns a list of forums object {"id": int, "name": str, "description": str}
@@ -55,7 +60,9 @@ def get_messsage():
 
     logging.info(f"nb_message={nb_message} start={start} forum={forum}")
 
-    return jsonify({"success": "true", "messages": select_message(nb_message, start, forum)})
+    return jsonify(
+        {"success": "true", "messages": select_message(nb_message, start, forum)}
+    )
 
 
 @app.route("/api/message", methods=["POST"])
