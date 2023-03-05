@@ -108,7 +108,7 @@ def init_connection():
     return sqlite_connection, cursor
 
 
-def last_message_id(forum=1):
+def select_last_message_id(forum=1):
     message_id = -1
     try:
         sqlite_connection, cursor = init_connection()
@@ -118,17 +118,21 @@ def last_message_id(forum=1):
             f"SELECT id FROM message WHERE forum = {forum} ORDER BY time DESC LIMIT 1;"
         )
         cursor.execute(sqlite_select_query)
-        message_id = cursor.fetchone()
+        row = cursor.fetchone()
+        if row != None:
+            message_id = row[0]
         logging.info(f"message id {message_id}")
         cursor.close()
 
+    except sqlite3.Error as error:
+        logging.info("Error while getting last message id", error)
     except sqlite3.Error as error:
         logging.info("Error while getting last message id", error)
     finally:
         if sqlite_connection:
             sqlite_connection.close()
 
-    return message_id[0]
+    return message_id
 
 
 if __name__ == "__main__":
@@ -136,6 +140,6 @@ if __name__ == "__main__":
     print(select_message())
     print(insert_message("bob", "", "hi there", 1))
     print(select_message())
-    print(last_message_id())
+    print(select_last_message_id())
     print(insert_message("bob", "", "hi there", 1))
-    print(last_message_id())
+    print(select_last_message_id())
