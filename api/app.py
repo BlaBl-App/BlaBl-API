@@ -2,7 +2,7 @@ import logging
 
 from flask import Flask, jsonify, request
 
-from .common import add_forum, get_forums_from_file, remove_forum
+from .common import add_forum_into_file, get_forums_from_file, remove_forum
 from .manage_db import init_db, insert_message, select_message
 
 logging.basicConfig(level=logging.INFO)
@@ -17,13 +17,13 @@ def root():
 
 @app.route("/api", methods=["GET"])
 def get_serv_info():
-    return jsonify({"success": "true", "name": "mother API"})
+    return jsonify({"success": True, "name": "mother API"})
 
 
 @app.route("/api/forums", methods=["GET"])
 def get_forums():
     # returns a list of forums object {"id": int, "name": str, "description": str}
-    return jsonify({"success": "true", "forums": get_forums_from_file()})
+    return jsonify({"success": True, "forums": get_forums_from_file()})
 
 
 @app.route("/api/forums", methods=["POST"])
@@ -35,19 +35,19 @@ def add_forum():
 
     # name is mandatory
     if name == "":
-        return jsonify({"success": "false"})
-    success = add_forum(name, description)
+        return jsonify({"success": False})
+    success = add_forum_into_file(name, description)
     return jsonify({"success": success})
 
 
 @app.route("/api/forums", methods=["DELETE"])
 def delete_forum():
     id = request.form.get("id", default=-1)
+    id=int(id)
     logging.info(f"id={id}")
-
     # id is mandatory
     if id == -1:
-        return jsonify({"success": "false"})
+        return jsonify({"success": False})
     success = remove_forum(id)
     return jsonify({"success": success})
 
@@ -61,7 +61,7 @@ def get_messsage():
     logging.info(f"nb_message={nb_message} start={start} forum={forum}")
 
     return jsonify(
-        {"success": "true", "messages": select_message(nb_message, start, forum)}
+        {"success": True, "messages": select_message(nb_message, start, forum)}
     )
 
 
@@ -76,9 +76,10 @@ def post_message():
 
     # nickname is mandatory
     if nickname == "":
-        return jsonify({"success": "false"})
+        return jsonify({"success": False})
     success = insert_message(nickname, pic, message, forum)
     return jsonify({"sucess": success})
+
 
 
 if __name__ == "__main__":

@@ -23,6 +23,7 @@ class TestAddingForum(unittest.TestCase):
         self.assertEqual(common.get_last_id_forum(), len(common.get_forums_from_file()))
 
     def test_remove_forum(self):
+        common.add_forum("test", "test")
         number = len(common.get_forums_from_file())
         self.assertEqual(common.remove_forum(common.get_last_id_forum()), True)
         self.assertEqual(len(common.get_forums_from_file()), number - 1)
