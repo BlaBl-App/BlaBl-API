@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 is_last_message_id_saved = False
 last_message_id = -1
+init_db()
 
 
 @app.route("/")
@@ -108,5 +109,5 @@ def get_last_message_id():
 
 
 def main():
-    init_db()
+    
     app.run(host="0.0.0.0", port=5555)
