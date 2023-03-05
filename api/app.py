@@ -107,6 +107,6 @@ def get_last_message_id():
     return jsonify({"success": "true", "last_message_id": last_message_id})
 
 
-if __name__ == "__main__":
+def main():
     init_db()
     app.run(host="0.0.0.0", port=5555)
