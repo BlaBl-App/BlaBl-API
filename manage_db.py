@@ -53,14 +53,15 @@ def init_db():
             sqlite_connection.close()
 
 
-def insert_message(nickname, pic, message_content, forum, time=int(time.time() * 1000)):
+def insert_message(nickname, pic, message_content, forum):
+    post_time = int(time.time() * 1000)
     nb_row = 0
     try:
         message_content = message_content.replace("'", "")
         sqlite_connection, cursor = init_connection()
         logging.info("Connected adding message...")
         print(forum)
-        sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}', {forum},{time});"
+        sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}', {forum},{post_time});"
         cursor.execute(sqlite_select_query)
         sqlite_connection.commit()
         nb_row = cursor.rowcount

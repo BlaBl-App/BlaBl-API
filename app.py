@@ -77,7 +77,7 @@ def post_message():
     # nickname is mandatory
     if nickname == "":
         return jsonify({"success": "false"})
-    success = insert_message(nickname, pic, message)
+    success = insert_message(nickname, pic, message, forum)
     return jsonify({"sucess": success})
 
 
