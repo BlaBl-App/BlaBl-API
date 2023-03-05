@@ -59,7 +59,6 @@ def insert_message(nickname, pic, message_content, forum, time=int(time.time() *
         message_content = message_content.replace('\'', "")
         sqlite_connection, cursor = init_connection()
         logging.info("Connected adding message...")
-        print(forum)
         sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}', {forum},{time});"
         cursor.execute(sqlite_select_query)
         sqlite_connection.commit()
