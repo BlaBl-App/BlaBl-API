@@ -36,6 +36,10 @@ class TestFunctions(unittest.TestCase):
     def test_select_message_after_insert(self):
         # returns a tab with my message
         manage_db.insert_message("nickname", "pic", "message_test", 1)
-        print(manage_db.select_message(10, 0, 1))
-        self.assertEqual(manage_db.select_message(10, 0, 1)[-1][3], "message_test")
+        self.assertEqual(manage_db.select_message(10, 0, 1)[0][3], "message_test")
+
+    def test_select_message_after_insert2(self):
+        # returns a tab with my message
+        manage_db.insert_message("nickname", "pic", "message_test", 1)
+        self.assertEqual(manage_db.select_message(10, 0, 1)[0][2], "nickname")
 

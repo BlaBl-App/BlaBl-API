@@ -53,13 +53,14 @@ def init_db():
             sqlite_connection.close()
 
 
-def insert_message(nickname, pic, message_content, forum, time=int(time.time() * 1000)):
+def insert_message(nickname, pic, message_content, forum):
+    post_time = int(time.time() * 1000)
     nb_row = 0
     try:
-        message_content = message_content.replace('\'', "")
+        message_content = message_content.replace("'", "")
         sqlite_connection, cursor = init_connection()
         logging.info("Connected adding message...")
-        sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}', {forum},{time});"
+        sqlite_select_query = f"INSERT INTO message VALUES (null, '{pic}', '{nickname}','{message_content}', {forum},{post_time});"
         cursor.execute(sqlite_select_query)
         sqlite_connection.commit()
         nb_row = cursor.rowcount
@@ -83,9 +84,7 @@ def select_message(nb, start, forum):
         sqlite_connection, cursor = init_connection()
         logging.info("Connected getting message...")
 
-        sqlite_select_query = (
-            f"SELECT * FROM message WHERE id > {start} and forum = {forum} ORDER BY time LIMIT {nb};"
-        )
+        sqlite_select_query = f"SELECT * FROM message WHERE id > {start} and forum = {forum} ORDER BY time DESC LIMIT {nb};"
         # sqlite_select_Query = f"SELECT name FROM sqlite_master WHERE type='table'"
         cursor.execute(sqlite_select_query)
         rows = cursor.fetchall()
@@ -99,6 +98,7 @@ def select_message(nb, start, forum):
             sqlite_connection.close()
 
     return rows
+
 
 def init_connection():
     sqlite_connection = sqlite3.connect(DB_NAME)
