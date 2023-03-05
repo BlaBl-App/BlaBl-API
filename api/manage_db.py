@@ -105,10 +105,3 @@ def init_connection():
     sqlite_connection = sqlite3.connect(DB_NAME)
     cursor = sqlite_connection.cursor()
     return sqlite_connection, cursor
-
-
-if __name__ == "__main__":
-    init_db()
-    print(select_message())
-    print(insert_message("bob", "", "hi there", 1))
-    print(select_message(forum=0))

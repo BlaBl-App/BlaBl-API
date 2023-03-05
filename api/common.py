@@ -29,8 +29,3 @@ def get_last_id_forum():
         data = json.load(f)
         return len(data["forums"]) + 1
     
-
-if __name__ == "__main__":
-    print(get_forums_from_file())
-    add_forum("Sport", "Sport Description")
-    print(get_forums_from_file())

@@ -2,8 +2,8 @@ import logging
 
 from flask import Flask, jsonify, request
 
-from common import add_forum, get_forums_from_file, remove_forum
-from manage_db import init_db, insert_message, select_message
+from .common import add_forum, get_forums_from_file, remove_forum
+from .manage_db import init_db, insert_message, select_message
 
 logging.basicConfig(level=logging.INFO)
 
@@ -76,5 +76,4 @@ def post_message():
 
 if __name__ == "__main__":
     init_db()
-
     app.run(host="0.0.0.0", port=5555)
