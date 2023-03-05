@@ -6,10 +6,10 @@ def get_forums_from_file():
         return json.load(f).get("forums")
     
 
-def add_forum(name, description):
+def add_forum_into_file(name, description):
     with open("forums.json", "r") as f:
         data = json.load(f)
-        data["forums"].append({"id": get_last_id_forum(), "name": name, "description": description})
+        data["forums"].append({"id": get_last_id_forum() + 1, "name": name, "description": description})
     with open("forums.json", "w") as f:
         json.dump(data, f)
     return True
@@ -27,10 +27,7 @@ def remove_forum(id):
 def get_last_id_forum():
     with open("forums.json", "r") as f:
         data = json.load(f)
-        return len(data["forums"]) + 1
+        return len(data["forums"])
     
-
 if __name__ == "__main__":
-    print(get_forums_from_file())
-    add_forum("Sport", "Sport Description")
-    print(get_forums_from_file())
+    remove_forum(5)

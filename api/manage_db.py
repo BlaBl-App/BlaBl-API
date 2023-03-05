@@ -126,20 +126,8 @@ def select_last_message_id(forum=1):
 
     except sqlite3.Error as error:
         logging.info("Error while getting last message id", error)
-    except sqlite3.Error as error:
-        logging.info("Error while getting last message id", error)
     finally:
         if sqlite_connection:
             sqlite_connection.close()
 
     return message_id
-
-
-if __name__ == "__main__":
-    init_db()
-    print(select_message())
-    print(insert_message("bob", "", "hi there", 1))
-    print(select_message())
-    print(select_last_message_id())
-    print(insert_message("bob", "", "hi there", 1))
-    print(select_last_message_id())
