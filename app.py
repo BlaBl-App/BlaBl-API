@@ -67,10 +67,10 @@ def get_messsage():
 
 @app.route("/api/message", methods=["POST"])
 def post_message():
-    nickname = request.form.get("nickname", default="")
+    nickname = request.form.get("nickname", default=None)
     pic = request.form.get("pic", default="")
     message = request.form.get("message", default="")
-    forum = request.form.get("forum", default="")
+    forum = request.form.get("forum", default=1)
 
     logging.info(f"nickname={nickname} pic={pic} message={message} forum={forum}")
 
