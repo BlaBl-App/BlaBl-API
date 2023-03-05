@@ -15,6 +15,11 @@ def root():
     return "Hey 👋 it's working! <br>This is the root of BlaBl'App API please read the <a href='https://github.com/BlaBl-App/BlaBl-API'>instruction</a>"
 
 
+@app.route("/api", methods=["GET"])
+def get_serv_info():
+    return jsonify({"success": "true", "name": "mother API"})
+
+
 @app.route("/api/forums", methods=["GET"])
 def get_forums():
     # returns a list of forums object {"id": int, "name": str, "description": str}
@@ -55,22 +60,24 @@ def get_messsage():
 
     logging.info(f"nb_message={nb_message} start={start} forum={forum}")
 
-    return jsonify({"success": "true", "messages": select_message(nb_message, start, forum)})
+    return jsonify(
+        {"success": "true", "messages": select_message(nb_message, start, forum)}
+    )
 
 
 @app.route("/api/message", methods=["POST"])
 def post_message():
-    nickname = request.form.get("nickname", default="")
+    nickname = request.form.get("nickname", default=None)
     pic = request.form.get("pic", default="")
     message = request.form.get("message", default="")
-    forum = request.form.get("forum", default="")
+    forum = request.form.get("forum", default=1)
 
     logging.info(f"nickname={nickname} pic={pic} message={message} forum={forum}")
 
     # nickname is mandatory
     if nickname == "":
         return jsonify({"success": "false"})
-    success = insert_message(nickname, pic, message)
+    success = insert_message(nickname, pic, message, forum)
     return jsonify({"sucess": success})
 
 
