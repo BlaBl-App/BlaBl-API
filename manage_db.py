@@ -34,7 +34,7 @@ def init_db():
                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                     pic TEXT,
                                     nickname TEXT NOT NULL,
-                                    message TEXT NOT NULL,
+                                    message TEXT(256) NOT NULL,
                                     forum INTEGER NOT NULL,
                                     time INTEGER NOT NULL);"""
 
