@@ -57,9 +57,9 @@ def delete_forum():
 
 @app.route("/api/message", methods=["GET"])
 def get_messsage():
-    nb_message = request.form.get("nb", default=10)
-    start = request.form.get("start", default=0)
-    forum = request.form.get("forum", default=1)
+    nb_message = request.args.get("nb", default=10)
+    start = request.args.get("start", default=0)
+    forum = request.args.get("forum", default=1)
 
     logging.info(f"nb_message={nb_message} start={start} forum={forum}")
 
@@ -92,7 +92,7 @@ def post_message():
 def get_last_message_id():
     global is_last_message_id_saved
     global last_message_id
-    forum = request.form.get("forum", default=1)
+    forum = request.args.get("forum", default=1)
 
     # do not request to BD last message if no new message posted
     if not is_last_message_id_saved:
