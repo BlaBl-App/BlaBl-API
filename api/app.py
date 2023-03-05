@@ -12,7 +12,11 @@ app = Flask(__name__)
 
 is_last_message_id_saved = False
 last_message_id = -1
-init_db()
+
+@app.before_first_request
+def startup():
+    init_db()
+
 
 
 @app.route("/")
