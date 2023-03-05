@@ -80,7 +80,7 @@ def insert_message(nickname, pic, message_content, forum):
     return nb_row > 0
 
 
-def select_message(nb, start, forum):
+def select_message(nb=10, start=-1, forum=1):
     rows = []
     try:
         sqlite_connection, cursor = init_connection()
@@ -108,8 +108,34 @@ def init_connection():
     return sqlite_connection, cursor
 
 
+def last_message_id(forum=1):
+    message_id = -1
+    try:
+        sqlite_connection, cursor = init_connection()
+        logging.info("Connected getting last message id...")
+
+        sqlite_select_query = (
+            f"SELECT id FROM message WHERE forum = {forum} ORDER BY time DESC LIMIT 1;"
+        )
+        cursor.execute(sqlite_select_query)
+        message_id = cursor.fetchone()
+        logging.info(f"message id {message_id}")
+        cursor.close()
+
+    except sqlite3.Error as error:
+        logging.info("Error while getting last message id", error)
+    finally:
+        if sqlite_connection:
+            sqlite_connection.close()
+
+    return message_id[0]
+
+
 if __name__ == "__main__":
     init_db()
     print(select_message())
     print(insert_message("bob", "", "hi there", 1))
-    print(select_message(forum=0))
+    print(select_message())
+    print(last_message_id())
+    print(insert_message("bob", "", "hi there", 1))
+    print(last_message_id())
