@@ -7,9 +7,6 @@ logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
-is_last_message_id_saved = False
-last_message_id = -1
-
 
 @app.route("/")
 def root():
@@ -68,7 +65,6 @@ def get_messsage():
 
 @app.route("/api/message", methods=["POST"])
 def post_message():
-    global is_last_message_id_saved
     nickname = request.form.get("nickname", default=None)
     pic = request.form.get("pic", default="")
     message = request.form.get("message", default="")
@@ -80,26 +76,16 @@ def post_message():
     if nickname == "":
         return jsonify({"success": False})
     success = insert_message(nickname, pic, message, forum)
-    # save that a new message is posted
-    if success:
-        is_last_message_id_saved = False
     return jsonify({"success": success})
 
 
 @app.route("/api/last_message_id", methods=["GET"])
 def get_last_message_id():
-    global is_last_message_id_saved
-    global last_message_id
     forum = request.args.get("forum", default=1)
 
-    # do not request to BD last message if no new message posted
-    if not is_last_message_id_saved:
-        last_message_id = select_last_message_id(forum)
+    last_message_id = select_last_message_id(forum)
 
-    logging.info(
-        f"last_message_id={last_message_id} is_last_message_id_saved={is_last_message_id_saved}"
-    )
-    is_last_message_id_saved = True
+    logging.info(f"last_message_id={last_message_id}")
 
     return jsonify({"success": "true", "last_message_id": last_message_id})
 
