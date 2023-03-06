@@ -1,10 +1,7 @@
 import logging
-
 from flask import Flask, jsonify, request
-
 from .common import add_forum_into_file, get_forums_from_file, remove_forum
-from .manage_db import (init_db, insert_message, select_last_message_id,
-                        select_message)
+from .manage_db import init_db, insert_message, select_last_message_id, select_message
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,11 +9,6 @@ app = Flask(__name__)
 
 is_last_message_id_saved = False
 last_message_id = -1
-
-@app.before_first_request
-def startup():
-    init_db()
-
 
 
 @app.route("/")
@@ -52,7 +44,7 @@ def add_forum():
 @app.route("/api/forums", methods=["DELETE"])
 def delete_forum():
     id = request.form.get("id", default=-1)
-    id=int(id)
+    id = int(id)
     logging.info(f"id={id}")
     # id is mandatory
     if id == -1:
@@ -113,5 +105,5 @@ def get_last_message_id():
 
 
 def main():
-    
+    init_db()
     app.run(host="0.0.0.0", port=5555)
