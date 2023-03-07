@@ -6,4 +6,4 @@ RUN pip install -r requirements.txt
 
 # run flask app
 EXPOSE 5555
-CMD ["gunicorn", "-b", "0.0.0.0:5555", "-k", "gevent", "-w", "4","--preload", "-c", "conf.py" ,  "api.app:app"]
+CMD ["gunicorn","--certfile", "fullchain.pem", "--keyfile", "privkey.pem", "-b", "0.0.0.0:5555", "-k", "gevent", "-w", "4","--preload", "-c", "conf.py" ,  "api.app:app"]
