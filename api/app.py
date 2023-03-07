@@ -1,11 +1,13 @@
 import logging
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from .common import add_forum_into_file, get_forums_from_file, remove_forum
 from .manage_db import init_db, insert_message, select_last_message_id, select_message
 
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/")
