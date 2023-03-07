@@ -1,2 +1,4 @@
 **/__pycache__/
 BlaBl-App.db
+fullchain.pem
+privkey.pem
