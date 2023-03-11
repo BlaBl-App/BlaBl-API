@@ -56,6 +56,7 @@ def init_db():
 def insert_message(nickname, pic, message_content, forum):
     post_time = int(time.time() * 1000)
     nb_row = 0
+    print(nickname, pic, message_content, forum, post_time)
     try:
         message_content = message_content.strip('"')
         message_content = message_content.replace("'", "''")
@@ -73,6 +74,29 @@ def insert_message(nickname, pic, message_content, forum):
 
     except sqlite3.Error as error:
         logging.error("Error while adding message", error)
+    finally:
+        if sqlite_connection:
+            sqlite_connection.close()
+
+    return nb_row > 0
+
+
+def delete_messages(forum_id):
+    nb_row = 0
+    try:
+        sqlite_connection, cursor = init_connection()
+        logging.info("Connected deleting message...")
+        sqlite_select_query = f"DELETE FROM message WHERE forum = {forum_id};"
+        cursor.execute(sqlite_select_query)
+        sqlite_connection.commit()
+        nb_row = cursor.rowcount
+        logging.info(
+            f"deleted {nb_row} row",
+        )
+        cursor.close()
+
+    except sqlite3.Error as error:
+        logging.error("Error while deleting message", error)
     finally:
         if sqlite_connection:
             sqlite_connection.close()
