@@ -20,7 +20,7 @@ class TestForums(unittest.TestCase):
                          len(common.get_forums_from_file()))
 
     def test_get_last_id_forum(self):
-        self.assertEqual(common.get_last_id_forum(), 4)
+        self.assertEqual(common.get_last_id_forum(), 3)
         self.assertEqual(common.get_last_id_forum(),
                          len(common.get_forums_from_file()))
 
