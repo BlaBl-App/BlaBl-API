@@ -1,5 +1,5 @@
 <div align="center">
-<img width="128" alt="Plugin icon - 4" src="https://user-images.githubusercontent.com/37497007/222099229-38659c41-e75f-4a0a-9227-84ee0b17bbfb.png">
+<img width="128" alt="logo" src="https://user-images.githubusercontent.com/37497007/225736338-4759c9e5-9a52-4998-8706-2aea5c481b04.png">
 
 <h1>BlaBl'API</h1>
 
